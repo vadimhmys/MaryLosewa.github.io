@@ -50,16 +50,27 @@ $(document).ready(function(){
     
     //анимация номера телефона
 
+    var phoneAnimTimeouts = [];
+
     function animNumberPhone(){
-        $('header .header__phone span').each(function(index){
+        // Clear pending timeouts and reset state to avoid overlaps
+        for (var i = 0; i < phoneAnimTimeouts.length; i++) {
+            clearTimeout(phoneAnimTimeouts[i]);
+        }
+        phoneAnimTimeouts = [];
+        var $digits = $('header .header__phone span');
+        $digits.removeClass('phoneAnim');
+        $digits.each(function(index){
          var item = $(this);
-         setTimeout(function(){
+         var addId = setTimeout(function(){
              item.addClass('phoneAnim')
          },200*(index+1));
-     
-         setTimeout(function(){
+      
+         var removeId = setTimeout(function(){
              item.removeClass('phoneAnim')
          },400*(index+1));
+         phoneAnimTimeouts.push(addId);
+         phoneAnimTimeouts.push(removeId);
         });
        }
        animNumberPhone();
@@ -88,7 +99,7 @@ $(document).ready(function(){
         event.preventDefault();
         var id  = $(this).attr('href'),
             top = $(id).offset().top;
-        $('html').animate({scrollTop: top}, 500);
+        $('html, body').animate({scrollTop: top}, 500);
     });
 
     //нажатие на кнопку УЗНАТЬ БОЛЬШЕ
